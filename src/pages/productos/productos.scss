@@ -1,0 +1,19 @@
+page-productos {
+    @media only screen and (min-width: 992px) {
+        .button-outline-md{
+            margin-top: 32px !important;
+        }
+        .tipo{
+            max-width: 9% !important;
+        }
+        .precio{
+            max-width: 6% !important;
+        }
+        .button-clear-md{
+            margin-top: 32px !important;
+        }
+        .unit{
+            margin-top: 23px !important;
+        }
+    }
+}

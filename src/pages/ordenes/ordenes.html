@@ -1,0 +1,90 @@
+<!--
+  Generated template for the Ordenes page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Ordenes</ion-title>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="irNuevaOrdenBuscar()">
+        <ion-icon name="add"></ion-icon>
+    </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ng-template #withFlags let-attrs="attrs">
+    <span [innerHTML]="attrs.data.perfil | boldprefix:attrs.keyword"></span>
+  </ng-template>
+  <ion-auto-complete #searchbar [dataProvider]="completeTestService" [template]="withFlags" [options]="{ placeholder : 'Buscar Clientes' }"></ion-auto-complete>
+  <ion-segment [(ngModel)]="filtro" color="primary">
+    <ion-segment-button value="Tomada">
+      Tomadas
+    </ion-segment-button>
+    <ion-segment-button value="Enviada">
+      Enviadas
+    </ion-segment-button>
+    <ion-segment-button value="Pagada">
+      Pagadas
+    </ion-segment-button>
+  </ion-segment>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 *ngFor="let e of ordenes" [hidden]="e.estado!=filtro">
+        <ion-card>
+          <ion-card-header (click)="irEditar(e.$key)">
+            <ion-item color="primary">
+              <ion-icon *ngIf="e.dataphone" name="calculator" item-right></ion-icon>
+              {{e.nombreCliente}} {{e.express?" - Express":""}}
+              <div style="float:right;">{{e.total | currency:'CRC':true}}</div><br>
+            </ion-item>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-icon name="time"></ion-icon>{{ e.hora | date:'shortDate'}} {{ e.hora | date:'shortTime'}}<br>
+            <ion-icon name="call"></ion-icon>{{e.telefonoCliente}}<br>
+            <ion-icon name="pin"></ion-icon>{{e.direccionCliente}}<br>
+            <div style="margin-left: 25px;" *ngFor="let linea of e.lineas">
+              <ion-icon name="checkmark-circle"></ion-icon>{{linea.cantidad | number : '1.1-3' }} {{linea.descripcion}}: {{linea.total | currency:'CRC':true}}<br>
+            </div>
+            <div style="margin-left: 25px;" *ngIf="e.express">
+              <ion-icon name="bicycle"></ion-icon>Express {{e.costoExpress | currency:'CRC':true}}<br>
+            </div>
+            <div text-wrap>
+              <ion-icon *ngIf="e.notas!=''" name="alert"></ion-icon>{{e.notas}}
+            </div>
+            <button ion-item (click)="cambiarEstado(e.estado, e.$key)">
+              <ion-icon name="time"  item-left></ion-icon>
+              <div style="float:left" *ngIf="e.estado=='Tomada'"> {{ e.hora | date:'shortTime' }} </div>
+              <div style="float:left" *ngIf="e.estado=='Alistada'"> {{ e.horaAlistado | date:'shortTime' }} </div>
+              <div style="float:left" *ngIf="e.estado=='Enviada'"> {{ e.horaEnvio | date:'shortTime' }} </div>
+              <div style="float:left" *ngIf="e.estado=='Pagada'"> {{ e.horaPagada | date:'shortTime' }} </div>
+              <div class="estado">{{e.estado}}</div>
+            </button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 *ngIf="cargando==false && clientes.length==0">
+        <ion-card>
+          <ion-card-header>
+            Sin resultados
+          </ion-card-header>
+          <ion-card-content>
+            <button ion-item (click)="irNuevoCliente()">
+              <ion-icon name="add" item-right></ion-icon>
+              Nueva Orden
+            </button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

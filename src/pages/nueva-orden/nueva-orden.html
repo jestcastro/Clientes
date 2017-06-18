@@ -1,0 +1,169 @@
+<!--
+  Generated template for the NuevaOrden page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ui.tipo==3?"Editar Orden":"Nueva Orden"}}</ion-title>
+    <ion-buttons right>
+      <button ion-button icon-only (click)="guardar()">
+        <ion-icon name="add"></ion-icon>
+    </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-item col-12 col-sm-9 col-md-6 col-lg-2 col-xl-2>
+        <ion-label>Express</ion-label>
+        <ion-checkbox [(ngModel)]="orden.express" (click)="calcularPrecio()"></ion-checkbox>
+      </ion-item>
+      <ion-item *ngIf="orden.express" col-12 col-sm-9 col-md-6 col-lg-2 col-xl-2>
+        <ion-label>Datafono</ion-label>
+        <ion-checkbox [(ngModel)]="orden.dataphone" (click)="calcularPrecio()"></ion-checkbox>
+      </ion-item>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 class="productos">
+        <ng-template #withFlags let-attrs="attrs">
+          <span [innerHTML]="attrs.data.perfil | boldprefix:attrs.keyword"></span>
+        </ng-template>
+        <ion-auto-complete (click)="buscarProducto()" #productos id="productos" [dataProvider]="productService" [template]="withFlags"
+          [options]="{ placeholder : 'Productos' }"></ion-auto-complete>
+      </ion-col>
+      <ion-col col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2 class="numero">
+        <ion-item>
+          <ion-label floating>Cantidad</ion-label>
+          <ion-input #cantidad id="cantidad" type="number" (input)="precio()" [(ngModel)]="linea.cantidad"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2 class="numero">
+        <ion-item>
+          <ion-label floating>Subtotal</ion-label>
+          <ion-input type="number" (input)="peso()" [(ngModel)]="linea.subtotal"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2 class="numero">
+        <ion-item>
+          <ion-label floating>Total</ion-label>
+          <ion-input type="number" disabled [(ngModel)]="linea.total"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col col-12 col-sm-12 col-md-2 col-lg-1 col-xl-1>
+        <button ion-button outline (click)="agregar()">Agregar</button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="orden.lineas.length>0">
+      <ion-col ion-item text-wrap col-5 col-sm-5 col-md-5 col-lg-3 col-xl-3>
+        Descripción
+      </ion-col>
+      <ion-col ion-item text-wrap col-3 col-sm-3 col-md-3 col-lg-1 col-xl-1>
+        Cantidad
+      </ion-col>
+      <ion-col ion-item text-wrap col-4 col-sm-4 col-md-4 col-lg-1 col-xl-1>
+        Total
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let l of orden.lineas; let i = index">
+      <ion-col ion-item text-wrap col-5 col-sm-5 col-md-5 col-lg-3 col-xl-3>
+        {{l?.descripcion}}
+      </ion-col>
+      <ion-col ion-item text-wrap col-3 col-sm-3 col-md-3 col-lg-1 col-xl-1>
+        {{l?.cantidad}}
+      </ion-col>
+      <ion-col ion-item text-wrap col-4 col-sm-4 col-md-4 col-lg-1 col-xl-1>
+        {{l?.total}}
+      </ion-col>
+      <ion-col class="precio" text-wrap col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3>
+        <ion-row>
+          <ion-col text-wrap col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+            <button ion-button clear full style="margin: 0 !important" (click)="editarLinea(l, i)"><ion-icon name="ios-create-outline"></ion-icon></button>
+          </ion-col>
+          <ion-col text-wrap col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6>
+            <button ion-button clear full style="margin: 0 !important" (click)="eliminarLinea(l, i)"><ion-icon name="trash"></ion-icon></button>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="orden.lineas.length>0 && orden.express">
+      <ion-col ion-item col-8 col-sm-8 col-md-8 col-lg-4 col-xl-4>
+        Express
+      </ion-col>
+      <ion-col ion-item col-4 col-sm-4 col-md-4 col-lg-1 col-xl-1>
+        {{ui.tipo==3?orden.costoExpress:(cliente.express?cliente.express:0)}}
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="orden.lineas.length>0">
+      <ion-col ion-item col-8 col-sm-8 col-md-8 col-lg-4 col-xl-4>
+        <b>Total</b>
+      </ion-col>
+      <ion-col ion-item col-4 col-sm-4 col-md-4 col-lg-1 col-xl-1>
+        <b> {{orden.total}}</b>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4>
+        <button ion-button clear *ngIf="!nota" (click)="nota=true">Agregar Nota</button>
+        <ion-item *ngIf="nota">
+          <ion-label floating>Notas</ion-label>
+          <ion-textarea type="text" [(ngModel)]="notas"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="ui.tipo==2">
+
+      <ng-template #withFlags let-attrs="attrs">
+        <span [innerHTML]="attrs.data.perfil | boldprefix:attrs.keyword"></span>
+      </ng-template>
+      <ion-auto-complete (click)="buscar()" #searchbar [dataProvider]="completeTestService" [template]="withFlags" [options]="{ placeholder : 'Buscar Clientes' }"></ion-auto-complete>
+    </ion-row>
+    <ion-row *ngIf="ui.tipo==1">
+      <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+        <button ion-button outline (click)="verCliente()">{{ui.verInfoCliente?"Ocultar información del Cliente":"Ver información del Cliente"}}</button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="ui.tipo==0">
+      <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+        <h4 style="margin-left: 13px;margin-top: 20px;">Informacion Cliente</h4>
+      </ion-col>
+    </ion-row>
+    <div *ngIf="ui.verInfoCliente || ui.tipo==0">
+      <ion-row>
+        <ion-col col-12 col-sm-9 col-md-3 col-lg-3 col-xl-3>
+          <ion-item>
+            <ion-label floating>Nombre</ion-label>
+            <ion-input type="text" [(ngModel)]="cliente.nombre"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-12 col-sm-9 col-md-3 col-lg-3 col-xl-3>
+          <ion-item>
+            <ion-label floating>Telefono</ion-label>
+            <ion-input type="number" [(ngModel)]="cliente.telefono"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3>
+          <ion-item>
+            <ion-label floating>Express</ion-label>
+            <ion-input type="number" (input)="calcularPrecio()" [(ngModel)]="cliente.express"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12>
+          <ion-item>
+            <ion-label floating>Direccion</ion-label>
+            <ion-textarea type="text" [(ngModel)]="cliente.direccion"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </div>
+    <br><br><br><br><br><br><br><br><br>
+  </ion-grid>
+</ion-content>

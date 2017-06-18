@@ -1,0 +1,42 @@
+page-nuevo-cliente {
+    @media only screen and (min-width: 992px) {
+        .button-outline-md{
+            margin-top: 32px !important;
+        }
+        [col-xl-2] {
+            -webkit-flex: 0 0 13%;
+            -ms-flex: 0 0 13%;
+            flex: 0 0 13%;
+            width: 13%;
+            max-width: 13%;
+        }
+         [col-xl-3] {
+            -webkit-flex: 0 0 18%;
+            -ms-flex: 0 0 18%;
+            flex: 0 0 18%;
+            width: 18%;
+            max-width: 18%;
+        }
+         [col-xl-3].descripcion {
+            -webkit-flex: 0 0 21%;
+            -ms-flex: 0 0 21%;
+            flex: 0 0 21%;
+            width: 21%;
+            max-width: 21%;
+        }
+        [col-xl-4] {
+            -webkit-flex: 0 0 26.33333%;
+            -ms-flex: 0 0 26.33333%;
+            flex: 0 0 26.33333%;
+            width: 26.33333%;
+            max-width: 26.33333%;
+        }
+        [col-xl-2].numero{
+            -webkit-flex: 0 0 9%;
+            -ms-flex: 0 0 9%;
+            flex: 0 0 9%;
+            width: 9%;
+            max-width: 9%;
+        }
+    }
+}
