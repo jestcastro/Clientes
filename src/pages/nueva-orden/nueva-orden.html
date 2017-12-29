@@ -9,8 +9,14 @@
   <ion-navbar>
     <ion-title>{{ui.tipo==3?"Editar Orden":"Nueva Orden"}}</ion-title>
     <ion-buttons right>
-      <button ion-button icon-only (click)="guardar()">
+      <button *ngIf="this.ui.tipo != 3" ion-button icon-only (click)="guardar()">
         <ion-icon name="add"></ion-icon>
+    </button>
+    <button *ngIf="this.ui.tipo == 3" ion-button icon-only (click)="actualizar()">
+        <ion-icon name="checkmark"></ion-icon>
+    </button>
+    <button ion-button icon-only (click)="imprimir()">
+        <ion-icon name="print"></ion-icon>
     </button>
     </ion-buttons>
   </ion-navbar>

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicApp, IonicModule } from 'ionic-angular';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 
@@ -16,7 +16,7 @@ import { Tipos } from "../pages/tipos/tipos"
 import { Ordenes } from '../pages/ordenes/ordenes';
 import { Ventas } from '../pages/ventas/ventas';
 
-
+import { ClientErrorHandler } from '../error-handler/error-handler';
 
 import { ChartsModule } from 'ng2-charts';
 import '../../node_modules/chart.js/src/chart.js';
@@ -74,7 +74,7 @@ export const firebaseConfig = {
     Fire,
     CompleteService,
     ProductoService,
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: ClientErrorHandler }
   ]
 })
 export class AppModule { }

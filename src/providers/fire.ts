@@ -125,8 +125,7 @@ export class Fire {
     return id;
   }
   update(section, id, object) {
-    this.af.database.object(section + '/' + id).update(object);
-    return id;
+    return this.af.database.object(section + '/' + id).update(object);
   }
   allQuery(path, query){
     return this.af.database.list(path, query);
